@@ -35,6 +35,6 @@ python start_spider
 * Spider caputre the case info every 1 minute
 * We can log into salesforce since we feed it cookies(include token and loadID)  from chrome, the cookies has life cycle, about 2-3 days. That means you may need to feed them again after the cookies became invalid.
 
-Please contact if it can't work on your side
+Please contact me if it can't work on your side
 
 Welcome add more feature to the code to make it more friendly.

@@ -31,3 +31,6 @@ def get_userID():
 
 def get_take_list():
     return take_list
+
+def set_token(newtoken):
+    token = newtoken

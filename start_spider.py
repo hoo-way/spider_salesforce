@@ -48,6 +48,17 @@ postData = {
 
 takeUrl = 'https://siliconlabs.lightning.force.com/aura?r=368&ui-force-components-controllers-ownerChangeContent.OwnerChangeContent.performOwnerChange=1'
 
+def update_postData():
+    global postData
+    global token
+    global queueID
+    global loadID
+    postData = {
+        "message": '{"actions":[{"id":"51987;a","descriptor":"serviceComponent://ui.force.components.controllers.lists.listViewManagerGrid.ListViewManagerGridController/ACTION$getRecordLayoutComponent","callingDescriptor":"UNKNOWN","params":{"listReference":{"entityKeyPrefixOrApiName":"Case","listViewIdOrName":"'+queueID+'","inContextOfRecordId":null,"isMRU":false,"isSearch":false},"layoutType":"LIST","layoutMode":"EDIT","inContextOfComponent":"force:listViewManagerGrid","enableMassActions":true,"enableRowErrors":true,"useHoversForLookup":false}},{"id":"51990;a","descriptor":"serviceComponent://ui.force.components.controllers.lists.listViewDataManager.ListViewDataManagerController/ACTION$getItems","callingDescriptor":"UNKNOWN","params":{"filterName":"'+queueID+'","entityName":"Case","pageSize":50,"layoutType":"LIST","sortBy":null,"getCount":false,"enableRowActions":false,"offset":0},"storable":true}]}',
+        "aura.context": '{"mode":"PROD","fwuid":"kHqYrsGCjDhXliyGcYtIfA","app":"one:one","loaded":{"APPLICATION@markup://one:one":"'+loadID+'"},"dn":[],"globals":{"eswConfigDeveloperName":null,"isVoiceOver":null,"setupAppContextId":null,"density":"VIEW_TWO","srcdoc":null,"appContextId":"06m1M000000KhjGQAS","dynamicTypeSize":null},"uad":true}',
+        "aura.pageURI": '/lightning/o/Case/list?filterName='+queueID,
+        "aura.token": token
+    }
 
 # r=None
 i=0
@@ -67,6 +78,7 @@ while True:
            pass
         # time.sleep(60)
     except Exception, e:
+        print("status: "+str(status))
         print(e)
         continue
     # print type(status)
@@ -75,10 +87,20 @@ while True:
         try:
             text2 = json.loads(r.content)
         except Exception, e:
-            print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S ')) 
-            print str(e) 
-            print " content: " +r.content
-            # tkMessageBox.showerror('Log in Fail',"status code = "+str(status))
+            # if token valid, will print below so that we can update token
+            #  */{"event":{"descriptor":"markup://aura:invalidSession","attributes":{"values":{"newToken":"eyJub25jZSI6InBPY3dTZUt2c0xqbXJ0QzF6VkoxX3ZvZVJfdS1QQU1BX2U1ekxBR1BMbjRcdTAwM2QiLCJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IntcInRcIjpcIjAwRDE2MDAwMDAwTkZZQ1wiLFwidlwiOlwiMDJHMU0wMDAwMDBEOWxpXCIsXCJhXCI6XCJjYWltYW5zaWduZXJcIn0iLCJjcml0IjpbImlhdCJdLCJpYXQiOjE1ODQ1ODI4MTkzNDEsImV4cCI6MH0=..Yo9i8VNOyBzFzU8qZsAB5m9G2Dwfwx8yBKRaGc46jkg="}}},"exceptionEvent":true}/*ERROR*/
+            print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S '))
+            newtoken_exist = r.content.find('newToken')
+            if newtoken_exist > 0 and r.content.find('ey') > 0:
+                newtoken_start = newtoken_exist + 11
+                newtoken_end = r.content.find('"}}},')
+                token = r.content[newtoken_start:newtoken_end]
+                print("find new token: " + token)
+                update_postData()
+                continue
+            else:
+                print str(e)  
+                print "---error content: " + r.content            
         else:
             # print text2["context"]["globalValueProviders"][6]["values"]["records"]
             # print text2["context"]["componentDefs"]["globalValueProviders"][5]
@@ -94,7 +116,7 @@ while True:
                     case_number =text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["CaseNumber"]["value"] # case number, type:string
                     case_district= text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["District__c"]["value"] # district
                     print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query for " + str(i) + " time: find case " + str(case_number) +' '+ str(case_district)
-                    if (case_number[len(case_number)-1] in take_list and case_district=='APAC':
+                    if (case_number[len(case_number)-1] in take_list) and (case_district == 'APAC'):
                         print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + "-------query for " + str(i) + " time: get case " + str(case_number) +' '+ str(case_district)
                         message_data = '{"actions":[{"id":"56925;a","descriptor":"serviceComponent://ui.force.components.controllers.ownerChangeContent.OwnerChangeContentController/ACTION$performOwnerChange","callingDescriptor":"UNKNOWN","params":{"recordIds":["' + key + '"],"newOwnerId":"'+userID+'","changeOwnerOptions":{"editableOptions":[{"label":"Send notification email","optionName":"SendEmail","isChecked":true,"isEditable":true,"isDisabled":false}],"nonEditableOptions":[{"label":"Notes and attachments","optionName":"TransferNotesAndAttachments","isChecked":true,"isEditable":false,"isDisabled":false},{"label":"Open activities","optionName":"TransferOpenActivities","isChecked":true,"isEditable":false,"isDisabled":false}],"qualifiedApiName":"Case","ownerFieldLabel":"Case Owner","ownerForeignKeyDomains":[{"name":"User","label":"User","labelPlural":"People","icon":"https://siliconlabs.my.salesforce.com/img/icon/t4v35/standard/user_120.png","color":"65CAE4"},{"name":"Group","label":"Queue","labelPlural":"Queues"}]},"doAccessCheck":false}}]}'
                         takeData = {
