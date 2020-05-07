@@ -23,8 +23,8 @@ User id can be found it your user page.
 # Fill up paramter into python file
 Open webinfo_salesforce.py and fill up the 5 paramters above.
 
-# Add number to take_list
-Add the mantissa number into take_list, spider will pick these case and give to you.
+# Add Queue ID and take number to take_list
+Add Queue ID and the mantissa number into take_list, spider will pick these case and give to you.
 
 # Start run
 python start_spider
