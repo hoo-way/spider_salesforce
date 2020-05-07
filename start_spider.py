@@ -8,6 +8,8 @@ import json
 import time
 import configuration
 from datetime import datetime
+from colorama import Fore,Back,Style
+import colorama
 
 #  https://siliconlabs.lightning.force.com/aura?r=5&ui-force-components-controllers-lists-listViewDataManager.ListViewDataManager.getItems=1&ui-force-components-controllers-lists-listViewManagerGrid.ListViewManagerGrid.getRecordLayoutComponent=1
 
@@ -73,6 +75,7 @@ def update_postData(queueID_t):
 
 # r=None
 i=0
+colorama.init(autoreset=True)
 requests.adapters.DEFAULT_RETRIES = 5
 s = requests.session()
 s.keep_alive = False
@@ -132,16 +135,16 @@ while True:
                 # print text2["context"]["componentDefs"][0]["fa"][0].keys()
                 length = len(text2["context"]["globalValueProviders"])
                 # print length
-                print '\n'
+                
                 if length==7:  #len(text2["context"]["globalValueProviders"]) == 6 代表有case，等于5代表没有case
                     # print len(text2["context"]["globalValueProviders"][5]["values"]["records"]) # case amount
                     for key in text2["context"]["globalValueProviders"][6]["values"]["records"].keys():
                         # print key
                         case_number =text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["CaseNumber"]["value"] # case number, type:string
                         case_district= text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["District__c"]["value"] # district
-                        print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: find case " + str(case_number) +' '+ str(case_district)
+                        print take["display_color"] + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: find case " + str(case_number) +' '+ str(case_district)
                         if (case_number[len(case_number)-1] in take["take_number"]) and (case_district == 'APAC'):
-                            print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + "--- query ["+ take["queueName"]+"] for " + str(i) + " time: get case " + str(case_number) +' '+ str(case_district)
+                            print Fore.RED + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: get case " + str(case_number) +' '+ str(case_district)
                             message_data = '{"actions":[{"id":"56925;a","descriptor":"serviceComponent://ui.force.components.controllers.ownerChangeContent.OwnerChangeContentController/ACTION$performOwnerChange","callingDescriptor":"UNKNOWN","params":{"recordIds":["' + key + '"],"newOwnerId":"'+userID+'","changeOwnerOptions":{"editableOptions":[{"label":"Send notification email","optionName":"SendEmail","isChecked":true,"isEditable":true,"isDisabled":false}],"nonEditableOptions":[{"label":"Notes and attachments","optionName":"TransferNotesAndAttachments","isChecked":true,"isEditable":false,"isDisabled":false},{"label":"Open activities","optionName":"TransferOpenActivities","isChecked":true,"isEditable":false,"isDisabled":false}],"qualifiedApiName":"Case","ownerFieldLabel":"Case Owner","ownerForeignKeyDomains":[{"name":"User","label":"User","labelPlural":"People","icon":"https://siliconlabs.my.salesforce.com/img/icon/t4v35/standard/user_120.png","color":"65CAE4"},{"name":"Group","label":"Queue","labelPlural":"Queues"}]},"doAccessCheck":false}}]}'
                             takeData = {
                                 "message": message_data,
@@ -157,6 +160,6 @@ while True:
                     print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: no case"
         else:
             print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: log in error--- status: "+str(status) +' '+ str(r.content)
-
+    print '\n'
     i+=1
     time.sleep(60)

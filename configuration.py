@@ -3,6 +3,7 @@
 # coding=utf8
 import io
 import sys
+from colorama import Fore
 
 
 # below info need to update when token invalid
@@ -22,12 +23,14 @@ take_list =[
     {
         "queueName":"MCU",
         "queueID":'00B1M000009ZmXSUA0',
-        "take_number":['1','5']
+        "take_number":['1','5'],
+        "display_color":Fore.GREEN
     },
     {
         "queueName":"Z-WAVE",
         "queueID":'00B1M000009ZU7RUAW',
-        "take_number":['0','1','2','3','4','5','6','7','8','9']
+        "take_number":['0','1','2','3','4','5','6','7','8','9'],
+        "display_color":Fore.BLUE
     }
 ]
 
