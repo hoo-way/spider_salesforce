@@ -23,18 +23,21 @@ take_list =[
     {
         "queueName":"MCU",
         "queueID":'00B1M000009ZmXSUA0',
+        "take_region": 'APAC',
         "take_number":['1','5'],
         "display_color":Fore.GREEN
     },
      {
         "queueName":"Unspecified Part Support Team",
         "queueID":'00B16000008q3F5EAI',
+        "take_region": 'ANY', # regardless region
         "take_number":['1','5'],
         "display_color":Fore.MAGENTA
     },
     {
         "queueName":"Z-Wave",
         "queueID":'00B1M000009ZU7RUAW',
+        "take_region": 'APAC',
         "take_number":['0','1','2','3','4','5','6','7','8','9'],
         "display_color":Fore.BLUE
     }
