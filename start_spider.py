@@ -141,7 +141,12 @@ while True:
                     for key in text2["context"]["globalValueProviders"][6]["values"]["records"].keys():
                         # print key
                         case_number =text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["CaseNumber"]["value"] # case number, type:string
-                        case_district= text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["District__c"]["value"] # district
+                        try:
+                            case_district = text2["context"]["globalValueProviders"][6]["values"]["records"][key]["Case"]["record"]["fields"]["District__c"]["value"] # district
+                        except Exception, e:
+                            case_district = 'No District Info'
+                        else:
+                            pass
                         print take["display_color"] + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: find case " + str(case_number) +' '+ str(case_district)
                         if (case_number[len(case_number)-1] in take["take_number"]) and (case_district == 'APAC'):
                             print Fore.RED + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: get case " + str(case_number) +' '+ str(case_district)
