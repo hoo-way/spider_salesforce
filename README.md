@@ -1,5 +1,11 @@
 "# spider_salesforce" 
 
+# Prepare
+* The script is based on python2, please check if you install python2 and pip before use this script
+* install module requests: ```pip install requests```
+* install module colorama: ```pip install colorama```
+
+
 Make sure you log into the saleforce and stop in the queue you want
 # Climbing web info
 * click F12 to enter chrome debug mode, choose NetWork tab and clean all log in window.

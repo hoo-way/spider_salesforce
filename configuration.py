@@ -21,11 +21,11 @@ userID='0051M000007zvqZQAQ'
 
 take_list =[
     {
-        "queueName":"MCU",
-        "queueID":'00B1M000009ZmXSUA0',
-        "take_region": 'APAC',
-        "take_number":['1','5'],
-        "display_color":Fore.GREEN
+        "queueName":"MCU",                # queue name
+        "queueID":'00B1M000009ZmXSUA0',   # queue ID that you find in a
+        "take_region": 'APAC',            # the region that you want to
+        "take_number":['1','5'],          # mantissa number of case num
+        "display_color":Fore.GREEN        # the color for printing log
     },
      {
         "queueName":"Unspecified Part Support Team",
