@@ -21,10 +21,48 @@ User id can be found it your user page.
 ![token](./img/04.png)
 
 # Fill up paramter into python file
-Open webinfo_salesforce.py and fill up the 5 paramters above.
+Open configuration.py and fill up the 5 paramters above.
 
-# Add Queue ID and take number to take_list
-Add Queue ID and the mantissa number into take_list, spider will pick these case and give to you.
+# Add take rule to take_list
+take_list is a python array, you need to add a or several take rule to this array. The rule struct is below.
+```
+take_list =[
+    {
+        "queueName":"MCU",               # queue name
+        "queueID":'00B1M000009ZmXSUA0',  # queue ID that you find in above step
+        "take_region": 'APAC',           # the region that you want to take
+        "take_number":['1','5'],         # mantissa number of case number
+        "display_color":Fore.GREEN       # the color for printing log
+    }
+]
+```
+If you want to monitor multi queue, configure it as below.
+```
+take_list =[
+    {
+        "queueName":"ZZZ",               # queue name
+        "queueID":'ZZZZZZZZZZZZ',  # queue ID that you find in above step
+        "take_region": 'APAC',           # the region that you want to take
+        "take_number":['1','5'],         # mantissa number of case number
+        "display_color":Fore.GREEN       # the color for printing log
+    },
+    {
+        "queueName":"XXX",               # queue name
+        "queueID":'XXXXXXXXXXX',  # queue ID that you find in above step
+        "take_region": 'APAC',           # the region that you want to take
+        "take_number":['1','5'],         # mantissa number of case number
+        "display_color":Fore.GREEN       # the color for printing log
+    },
+    {
+        "queueName":"YYY",               # queue name
+        "queueID":'YYYYYYYYYY',  # queue ID that you find in above step
+        "take_region": 'APAC',           # the region that you want to take
+        "take_number":['1','5'],         # mantissa number of case number
+        "display_color":Fore.GREEN       # the color for printing log
+    }
+]
+```
+
 
 # Start run
 python start_spider
