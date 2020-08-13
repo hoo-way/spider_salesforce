@@ -17,7 +17,7 @@ Make sure you log into the saleforce and stop in the queue you want
 Please see the picture below to know how to get cookies.
 ![cookies](./img/02.png)
 
-Please see the picture below to know how to get loadID and token.
+Please see the picture below to know how to get loadID(Orange circle),fwuid(Green circle) and token(Blue circle).
 ![token](./img/03.png)
 # Find Queue id, user id
 Queue id can be found in your link address, such as https://siliconlabs.lightning.force.com/lightning/o/Case/list?filterName=00B1M0000096zClUAI
