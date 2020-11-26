@@ -107,6 +107,7 @@ while True:
         except Exception, e:
             print("status: "+str(status))
             print(e)
+            sys.stdout.flush()
             continue
         # print type(status)
         # print r.content
@@ -137,26 +138,30 @@ while True:
                 length = len(text2["context"]["globalValueProviders"])
                 # print length
                 
-                if length==5:  #len(text2["context"]["globalValueProviders"]) == 6 代表有case，等于5代表没有case
+                if length==3:  #len(text2["context"]["globalValueProviders"]) == 6 代表有case，等于5代表没有case
                     # print len(text2["context"]["globalValueProviders"][5]["values"]["records"]) # case amount
-                    for key in text2["context"]["globalValueProviders"][4]["values"]["records"].keys():
+                    for key in text2["context"]["globalValueProviders"][2]["values"]["records"].keys():
                         # print key
-                        case_number =text2["context"]["globalValueProviders"][4]["values"]["records"][key]["Case"]["record"]["fields"]["CaseNumber"]["value"] # case number, type:string 
-                        if 'MCU'==take["queueName"]:
-                            case_country = text2["context"]["globalValueProviders"][4]["values"]["records"][key]["Case"]["record"]["fields"]["Contact_Country__c"]["value"]
-                            # print case_country
-                        else:
-                            case_country = 'ANY'
+                        case_number =text2["context"]["globalValueProviders"][2]["values"]["records"][key]["Case"]["record"]["fields"]["CaseNumber"]["value"] # case number, type:string 
+                        case_country = text2["context"]["globalValueProviders"][2]["values"]["records"][key]["Case"]["record"]["fields"]["Contact_Country__c"]["value"]
+                        # if 'MCU'==take["queueName"]:
+                        #     case_country = text2["context"]["globalValueProviders"][2]["values"]["records"][key]["Case"]["record"]["fields"]["Contact_Country__c"]["value"]
+                        #     # print case_country
+                        # else:
+                        #     case_country = 'ANY'
                         try:
-                            case_district = text2["context"]["globalValueProviders"][4]["values"]["records"][key]["Case"]["record"]["fields"]["District__c"]["value"] # district
+                            case_district = text2["context"]["globalValueProviders"][2]["values"]["records"][key]["Case"]["record"]["fields"]["District__c"]["value"] # district
                         except Exception, e:
                             case_district = 'No District Info'
                         else:
                             pass
+                        sys.stdout.flush()
                         print take["display_color"] + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: find case " + str(case_number) +' '+ str(case_district)
-                        if (case_number[len(case_number)-1] in take["take_number"]) and ((case_district == take["take_region"]) or (take["take_region"] == 'ANY')) and ('India'!=case_country):
+                        # sys.stdout.flush()
+                        if (case_number[len(case_number)-1] in take["take_number"]) and ((case_district == take["take_region"]) or (take["take_region"] == 'ANY')) and ('India'!=case_country) and ('IN'!=case_country):
                             print Fore.RED + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: get case " + str(case_number) +' '+ str(case_district)
                             message_data = '{"actions":[{"id":"56925;a","descriptor":"serviceComponent://ui.force.components.controllers.ownerChangeContent.OwnerChangeContentController/ACTION$performOwnerChange","callingDescriptor":"UNKNOWN","params":{"recordIds":["' + key + '"],"newOwnerId":"'+userID+'","changeOwnerOptions":{"editableOptions":[{"label":"Send notification email","optionName":"SendEmail","isChecked":true,"isEditable":true,"isDisabled":false}],"nonEditableOptions":[{"label":"Notes and attachments","optionName":"TransferNotesAndAttachments","isChecked":true,"isEditable":false,"isDisabled":false},{"label":"Open activities","optionName":"TransferOpenActivities","isChecked":true,"isEditable":false,"isDisabled":false}],"qualifiedApiName":"Case","ownerFieldLabel":"Case Owner","ownerForeignKeyDomains":[{"name":"User","label":"User","labelPlural":"People","icon":"https://siliconlabs.my.salesforce.com/img/icon/t4v35/standard/user_120.png","color":"65CAE4"},{"name":"Group","label":"Queue","labelPlural":"Queues"}]},"doAccessCheck":false}}]}'
+                            sys.stdout.flush()
                             takeData = {
                                 "message": message_data,
                                 "aura.context": '{"mode":"PROD","fwuid":"'+fwuid+'","app":"one:one","loaded":{"APPLICATION@markup://one:one":"'+loadID+'"},"dn":[],"globals":{"eswConfigDeveloperName":null,"isVoiceOver":null,"setupAppContextId":null,"density":"VIEW_TWO","srcdoc":null,"appContextId":"06m1M000000KhjGQAS","dynamicTypeSize":null},"uad":true}',
@@ -169,8 +174,11 @@ while True:
 
                 else:
                     print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: no case"
+                    sys.stdout.flush()
         else:
             print str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + " query ["+ take["queueName"]+"] for " + str(i) + " time: log in error--- status: "+str(status) +' '+ str(r.content)
+            sys.stdout.flush()
     print '\n'
+    sys.stdout.flush()
     i+=1
     time.sleep(60)
